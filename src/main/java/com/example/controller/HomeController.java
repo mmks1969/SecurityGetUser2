@@ -1,7 +1,5 @@
 package com.example.controller;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-
 import java.security.Principal;
 
 import org.springframework.security.core.Authentication;
