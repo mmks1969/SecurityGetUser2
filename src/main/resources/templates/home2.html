@@ -3,26 +3,13 @@
 		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
 	<meta charset="UTF-8"></meta>
-<title>GetUser2</title>
+<title>GetUser</title>
 </head>
 <body class="text-center">
 	<h1>HOME</h1>
 	<!-- ユーザー情報の取得 -->
 	<p>
 		ユーザーＩＤ：<span sec:authentication="name"></span>
-	</p>
-	<!-- 独自ユーザー情報の取得 -->
-	<p>
-		principal.userId:<span sec:authentication="principal.userId"></span>
-	</p>
-	<p>
-		principal.username:<span sec:authentication="principal.username"></span>
-	</p>
-	<p>
-		ユーザー名:<span sec:authentication="principal.appUserName"></span>
-	</p>
-	<p>
-		メール:<span sec:authentication="principal.mailAddress"></span>
 	</p>
 	<p>
 		ロール：<span sec:authentication="principal.authorities"></span>
