@@ -7,6 +7,6 @@ import lombok.Setter;
 @Setter
 public class PasswordForm {
 	// パスワード
-	private String passwordString;
+	private String password;
 
 }

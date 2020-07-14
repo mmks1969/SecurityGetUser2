@@ -32,7 +32,7 @@ public class PasswordChangeController {
 			, @ModelAttribute PasswordForm form
 			, @AuthenticationPrincipal AppUserDetails user) throws ParseException{
 		
-		service.updatePasswordDate(user.getUserId(), form.getPasswordString());
+		service.updatePasswordDate(user.getUserId(), form.getPassword());
 		
 		return "home";
 		

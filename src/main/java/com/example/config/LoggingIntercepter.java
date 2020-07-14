@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component("LoggingIntercepter")
 @Slf4j
-public class LoggingInterCepter implements HandlerInterceptor {
+public class LoggingIntercepter implements HandlerInterceptor {
 	
 	// USER_IDのキー名
 	private static final String USER_ID= "USER_ID";
@@ -71,7 +71,8 @@ public class LoggingInterCepter implements HandlerInterceptor {
 			HttpServletResponse response,
 			Object handler,
 			Exception ex) {
-		// 何もしない
+		MDC.remove(SESSION_ID);
+		MDC.remove(USER_ID);
 	}
 	
 }
