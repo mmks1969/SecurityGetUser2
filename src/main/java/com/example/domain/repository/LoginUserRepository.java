@@ -3,13 +3,17 @@ package com.example.domain.repository;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import com.example.domain.model.AppUserDetails;
@@ -19,10 +23,22 @@ public class LoginUserRepository {
 	@Autowired
 	private JdbcTemplate jdbc;
 	
-	// ユーザー情報を取得するSQL
+	@Autowired
+	private MessageSource messageSource;
+	
+    /** メッセージのキー(認証失敗) */
+    private static final String BAD_CREDENTIALS = "AbstractUserDetailsAuthenticationProvider.badCredentials";
+
+    // ユーザー情報を取得するSQL
 	private static final String SELECT_USER_SQL = "SELECT * "
 												+ "FROM m_user "
 												+ "WHERE user_id = ?";
+	// ユーザー情報を取得するSQL(テナントID）
+	private static final String SELECT_USER_SQL2 = " SELECT * "
+												+ " FROM m_user "
+												+ " WHERE user_id = ? "
+												+ " AND tenant_id = ? ";
+	
 	// 権限リストを取得するSQL
 	private static final String SELECT_USER_ROLE = "SELECT "
 												+ "    role.role_name "
@@ -62,6 +78,29 @@ public class LoginUserRepository {
 		
 		// 結果返却用のUserDetailsを生成
 		AppUserDetails user = buildUserDetails(userMap, grantedAuthorityList);
+		
+		return user;
+	}
+	
+	// ユーザー情報を取得して、UserDetailsを生成するメソッド
+	public UserDetails selectOne(String userId, String tenantId) {
+		
+		AppUserDetails user = null;
+		
+		try {
+			// select実行(ユーザーの取得）
+			Map<String, Object>userMap = jdbc.queryForMap(SELECT_USER_SQL2, userId, tenantId);
+			
+			// 権限リストの取得(メソッド)
+			List<GrantedAuthority>grantedAuthorityList  = getRoleList(userId);
+			
+			// 返却用のUserDetailsを生成
+			user = buildUserDetails(userMap, grantedAuthorityList);
+			
+		} catch(EmptyResultDataAccessException e) {
+			// エラーメッセージ取得
+			String message = messageSource.getMessage(BAD_CREDENTIALS, null, Locale.getDefault());
+		}
 		
 		return user;
 	}

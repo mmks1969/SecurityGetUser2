@@ -37,6 +37,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return user;
 	}
 	
+	// 独自認証用のメソッド
+	public UserDetails loadUserByUsernameAndTenantId(String username, String tenantId) throws UsernameNotFoundException{
+		
+		// リポジトリ（DAO）からUserDetailsを取得
+		UserDetails user = repository.selectOne(username, tenantId);
+		
+		return user;
+	}
+	
 	// パスワードを更新する
 	public void updatePasswordDate(String userId, String password) throws ParseException {
 		
